@@ -11,7 +11,7 @@
 void initGraph();
 void newGame();
 int getKey();
-MOUSEMSG* getMouseMsg();
+//MOUSEMSG* getMouseMsg();
 int checkWin();
 int confirm(int status);
 //int x = 200;
@@ -117,7 +117,7 @@ int main()
 
 void initGraph()
 {
-	initgraph(640, 480);   // 创建绘图窗口，大小为 640x480 像素
+	initgraph(1200, 700);   // 创建绘图窗口，大小为 640x480 像素
 	
 }
 /*
@@ -150,6 +150,7 @@ void newGame()
 }
 
 // 封装的获得鼠标事件指针的函数
+/*
 MOUSEMSG* getMouseMsg()
 {
 	if (MouseHit())
@@ -162,6 +163,7 @@ MOUSEMSG* getMouseMsg()
 		return NULL;
 	}
 }
+*/
 
 // 封装的获取键盘事件的函数
 int getKey()
