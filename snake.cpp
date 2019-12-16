@@ -88,7 +88,7 @@ status insertByIndex(int x, int y, int index, Head snakeHead)
 	}
 	else
 	{
-		insertByNode(x, y, insPos->previous);
+		return insertByNode(x, y, insPos->previous);
 	}
 }
 
@@ -205,6 +205,7 @@ status initSnake(Snake snake, int x, int y)
 	snake->tail->next = NULL;
 	snake->length = 2;
 	snake->velocity = DEFAULT_MOVE_SPEED;
+	snake->hasWisdom = NO;
 	return SUCCESS;
 }
 

@@ -26,7 +26,10 @@ typedef struct game {
 	Mine mines;
 	Wall walls;
 	WisdomGrass wisdomGrass;
-	
+	// 游戏是否结束的状态
+	status isOver;
+	// 当前关卡是否胜利的状态
+	status hasWon;
 }* Game;
 
 
@@ -35,4 +38,5 @@ void nextScreening(Game game);
 void newGame(Game game);
 Game loadGame(FILE* fp);
 FILE* saveGame(Game game);
+void checkCollisions(Game game);
 #endif // !_GAME_H

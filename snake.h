@@ -19,6 +19,7 @@ typedef struct snake {
 	double xDirection;
 	double yDirection;
 	int velocity; // 蛇运动速度
+	status hasWisdom; // 是否处于吃了智慧草的状态
 }* Snake;
 
 //status initHead(Head snakeHead);

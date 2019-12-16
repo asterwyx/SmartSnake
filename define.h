@@ -22,7 +22,14 @@
 #define STARTY 50 // 表示游戏区在屏幕上的起始Y坐标
 #define SIZEX 20 // 表示一个方块的长度
 #define SIZEY 20 // 表示一个方块的宽度
+#define MINE_NODE_SIZE 7
 #define SNAKE_NODE_SIZE 5
+#define FOOD_NODE_WIDTH 1
+#define FOOD_NODE_HEIGHT 1
+#define GRASS_NODE_WIDTH 1
+#define GRASS_NODE_HEIGHT 1
+#define WALL_NODE_WIDTH 1
+#define WALL_NODE_HEIGHT 1
 #define DEFAULT_MOVE_SPEED 5
 #define SNAKE_MOVE_SPEED 2
 #define INIT_SNAKE_X 200
@@ -33,5 +40,14 @@
 #define ERROR -1
 #define YES 0
 #define NO 1
+
+// 各个物体的得分，被炸弹炸到分数直接减半，这意味着越到后面炸的损失越大
+#define FOOD_SCORE 10
+#define POISON_SCORE -16
+#define WISDOM_SCORE 18
 typedef int status;
+
+// 工具函数
+extern double dist(int x1, int y1, int x2, int y2);
+
 #endif // !_DEFINE_H

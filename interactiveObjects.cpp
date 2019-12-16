@@ -1,5 +1,6 @@
 #include "interactiveObjects.h"
 #include <stdlib.h>
+#include "define.h"
 status initObject(PtrToObject o, Kind type)
 {
 	// 不同于蛇，Object的头结点是空的，从第二个结点开始存储信息
@@ -17,6 +18,32 @@ status initObject(PtrToObject o, Kind type)
 		o->head->previous = NULL;
 		o->head->next = NULL;
 		o->size = 0; // 初始化大小
+		// 初始化各个的参数
+		switch (type)
+		{
+		case MINE:
+			o->parameters[0] = MINE_NODE_SIZE;
+			o->parameters[1] = 0;
+			break;
+		case FOOD:
+			o->parameters[0] = FOOD_NODE_WIDTH;
+			o->parameters[1] = FOOD_NODE_HEIGHT;
+			break;
+		case POISONOUSWEEDS:
+			o->parameters[0] = GRASS_NODE_WIDTH;
+			o->parameters[1] = GRASS_NODE_HEIGHT;
+			break;
+		case WISDOMGRASS:
+			o->parameters[0] = GRASS_NODE_WIDTH;
+			o->parameters[1] = GRASS_NODE_HEIGHT;
+			break;
+		case WALL:
+			o->parameters[0] = WALL_NODE_WIDTH;
+			o->parameters[1] = WALL_NODE_HEIGHT;
+			break;
+		default:
+			break;
+		}
 		o->type = type; // 初始化为给定的类别
 		return SUCCESS;
 	}
@@ -109,7 +136,7 @@ status o_insertByIndex(int x, int y, int index, PtrToNode head)
 	}
 	else
 	{
-		o_insertByNode(x, y, insPos->previous);
+		return o_insertByNode(x, y, insPos->previous);
 	}
 }
 
@@ -175,4 +202,115 @@ PtrToNode o_findNodeByValue(int x, int y, PtrToNode head)
 		}
 		position = position->next;
 	}
+}
+
+PtrToNode checkCollision(PtrToObject o, Snake snake)
+{
+	if (snake == NULL || o == NULL)
+	{
+		perror("NULL snake");
+		return NULL;
+	}
+	PtrToNode result = o->head->next;
+	if (o->type == MINE)
+	{
+		while (result != NULL)
+		{
+			if (dist(result->x, result->y, snake->head->x, snake->head->y) < (SNAKE_NODE_SIZE + MINE_NODE_SIZE))
+			{
+				break;
+			}
+			result = result->next;
+		}
+	}
+	else
+	{
+		while (result != NULL)
+		{
+			if (snake->head->x < result->x)
+			{
+				// 位于矩形左边界的左边
+				if (snake->head->y < result->y)
+				{
+					// 位于矩形上边界的上面，整体上位于左上角
+					if (dist(snake->head->x, snake->head->y, result->x, result->y) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+				else if (snake->head->y > (result->y + o->parameters[1]))
+				{
+					// 位于矩形下边界的下面，整体上位于左下角
+					if (dist(snake->head->x, snake->head->y, result->x, result->y + o->parameters[1]) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+				else
+				{
+					// 位于矩形的上下边界中间，整体上位于矩形的左边
+					if ((result->x - snake->head->x) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+			}
+			else if (snake->head->x > (result->x + o->parameters[0]))
+			{
+				// 位于矩形右边界的右边
+				if (snake->head->y < result->y)
+				{
+					// 位于矩形上边界的上面，整体上位于右上角
+					if (dist(snake->head->x, snake->head->y, result->x + o->parameters[0], result->y) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+				else if (snake->head->y > (result->y + o->parameters[1]))
+				{
+					// 位于矩形下边界的下面，整体上位于右下角
+					if (dist(snake->head->x, snake->head->y, result->x + o->parameters[0], result->y + o->parameters[1]) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+				else
+				{
+					// 位于矩形的上下边界中间，整体上位于矩形的右边
+					if ((snake->head->x - result->x) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				// 位于矩形左右边界的中间区域
+				if (snake->head->y < result->y)
+				{
+					// 位于矩形上边界的上面，整体上位于正上面
+					if ((result->y - snake->head->y) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+				else if (snake->head->y > (result->y + o->parameters[1]))
+				{
+					// 位于矩形下边界的下面，整体上位于正下面
+					if ((snake->head->y - result->y) < SNAKE_NODE_SIZE)
+					{
+						break;
+					}
+				}
+				else
+				{
+					// 位于矩形的上下边界中间，整体上位于矩形的中间
+					break;
+				}
+			}
+			result = result->next; // 遍历后一个结点
+		}
+	}
+	
+	return result;
 }

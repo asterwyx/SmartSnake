@@ -1,6 +1,7 @@
 #ifndef _INTERACTIVE_OBJECTS_H
 #define _INTERACTIVE_OBJECTS_H
 #include "define.h"
+#include "snake.h"
 // 表示互动物体的单向链表
 typedef struct o_node {
 	int x;
@@ -40,4 +41,5 @@ status o_deleteNode(PtrToNode node, PtrToNode head);
 status o_checkExistence(PtrToNode node, PtrToNode head);
 PtrToNode o_findNodeByIndex(int index, PtrToNode head);
 PtrToNode o_findNodeByValue(int x, int y, PtrToNode head);
+PtrToNode checkCollision(PtrToObject o, Snake snake);
 #endif // !_INTERACTIVE_OBJECTS_H

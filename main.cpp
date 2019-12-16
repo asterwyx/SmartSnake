@@ -26,6 +26,7 @@ int main()
 	initGraph(); // 图形显示方式初始化
 	int gameRes = 0;
 	int currentCount = 0;
+	int addCount = 0;
 	Snake snake = (Snake)malloc(sizeof(struct snake));
 	if (snake == NULL)
 	{
@@ -41,11 +42,17 @@ int main()
 		{
 			if ((GetTickCount() - currentCount) > DELTA)
 			{
+				if ((GetTickCount() - addCount) > 10 * DELTA)
+				{
+					addTail(snake);
+					addCount = GetTickCount();
+				}
 				//x += (int)SNAKE_MOVE_SPEED * xDirection;
 				//y += (int)SNAKE_MOVE_SPEED * yDirection;
 				moveSnake(snake);
 				cleardevice();
-				//circle(x, y, SNAKE_NODE_SIZE);
+				//circle(0, 0, 100);
+				rectangle(0, 0, 100, 100);
 				drawSnake(snake);
 				currentCount = GetTickCount();
 			}
