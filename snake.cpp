@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <easyx.h>
 #include <stdio.h>
-#define SUCCESS 0
-#define FAILURE 1
-#define ERROR -1
 
 /*
 status initHead(Head snakeHead)
@@ -38,12 +35,13 @@ status makeEmpty(Head snakeHead)
 		return ERROR;
 	}
 	Position tmp = snakeHead->next;
-	while (tmp != snakeHead->previous)
+	while (tmp != NULL)
 	{
 		snakeHead->next = tmp->next;
 		free(tmp);
 		tmp = snakeHead->next;
 	}
+	snakeHead->next = NULL; // 指针置空
 	return SUCCESS;
 }
 
@@ -59,7 +57,7 @@ status insertByNode(int x, int y, Position node)
 		Position newNode = (Position)malloc(sizeof(Snake));
 		if (newNode == NULL)
 		{
-			printf("Out of space!!!");
+			perror("Out of space!!!");
 			return FAILURE;
 		}
 		else
@@ -72,7 +70,6 @@ status insertByNode(int x, int y, Position node)
 			node->next = newNode;
 			return SUCCESS;
 		}
-		
 	}
 }
 
@@ -112,6 +109,19 @@ Position findNodeByIndex(int index, Head snakeHead)
 		tmp = tmp->next;
 	}
 	return tmp;
+}
+
+Position findNodeByValue(int x, int y, Head snakeHead)
+{
+	Position position = snakeHead;
+	while (position != NULL)
+	{
+		if (position->x == x && position->y == y)
+		{
+			return position;
+		}
+		position = position->next;
+	}
 }
 
 int getLength(Head snakeHead)
@@ -235,4 +245,100 @@ void advanceNode(Position position)
 		position->y = position->previous->y;
 	}
 }
+
+void addTail(Snake snake)
+{
+	if (snake == NULL)
+	{
+		perror("NULL snake!!!");
+		return;
+	}
+	// 适当的位置是指尾部三个结点连成一条线，且距离相等，当只剩一个头结点的时候，在前进方向的反方向添加
+	Tail newTail = (Tail)malloc(sizeof(Node)); // 新建尾结点
+	if (newTail != NULL)
+	{
+		if (snake->length == 1)
+		{
+			// 确定新结点在尾结点的x,y坐标上的x,y增量，和前进方向上的增量相反
+			int deltaX = -snake->xDirection * SNAKE_NODE_SIZE * 2;
+			int deltaY = -snake->yDirection * SNAKE_NODE_SIZE * 2;
+			// 初始化尾结点
+			newTail->x = snake->tail->x + deltaX;
+			newTail->y = snake->tail->y + deltaY;
+			
+
+
+		}
+		else
+		{
+			// 普通情况下，使用中点坐标关系
+			newTail->x = 2 * snake->tail->x - snake->tail->previous->x;
+			newTail->y = 2 * snake->tail->y - snake->tail->previous->y;
+		}
+		// 加到蛇上去
+		snake->tail->next = newTail;
+		newTail->previous = snake->tail;
+		newTail->next = NULL;
+		snake->tail = newTail;
+	}
+	else
+	{
+		perror("Out of space!!!");
+		return;
+	}
+}
+
+void deleteOne(Snake snake)
+{
+	// 删除蛇里面的一个结点，并将长度减一，如果是零，则直接返回
+	if (snake == NULL)
+	{
+		perror("NULL snake");
+		return;
+	}
+	if (snake->length == 0)
+	{
+		return; // 长度为0直接返回
+	}
+	else
+	{
+		// 先将长度减一
+		snake->length--;
+		// 删除尾结点
+		Position tmpPos = snake->tail; // 记录原来的尾结点
+		snake->tail = tmpPos->previous; // 设置新的尾结点
+		snake->tail->next = NULL; // 重新设置NULL
+		free(tmpPos); // 释放无用的尾结点
+	}
+}
+
+void deleteHalf(Snake snake)
+{
+	if (snake == NULL)
+	{
+		perror("NULL snake!!!");
+		return;
+	}
+	if (snake->length == 0)
+	{
+		return;
+	}
+	else if (snake->length == 1)
+	{
+		// 只有一个头结点的特殊情况，要将snake的头尾结点指针也要置空
+		free(snake->head); // 直接释放掉头结点
+		snake->head = NULL;
+		snake->tail = NULL; // 头尾指针置空
+		snake->length = 0;
+	}
+	else
+	{
+		int halfLength = snake->length / 2; // 算出一半的长度
+		Position newTail = findNodeByIndex(halfLength, snake->head); // 确定了一半的长度，一般长度位置的结点也就成了新的尾结点
+		makeEmpty(newTail); // 置空新的尾结点之后的所有结点
+		snake->tail = newTail; // 设置新的尾结点
+		snake->length = halfLength; // 设置新蛇的长度
+	}
+}
+
 

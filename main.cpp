@@ -6,17 +6,7 @@
 #include <math.h>
 #include "snake.h"
 #include <sysinfoapi.h>
-#define DELTA 32
-#define WIN 1
-#define LOSE -1
-#define CONTINUE 0
-#define KEY_W 'W'
-#define KEY_A 'A'
-#define KEY_S 'S'
-#define KEY_D 'D'
-#define SNAKE_MOVE_SPEED 2
-#define INIT_SNAKE_X 200
-#define INIT_SNAKE_Y 200
+
 
 void initGraph();
 void newGame();
