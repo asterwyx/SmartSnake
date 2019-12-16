@@ -1,9 +1,11 @@
 #include "snake.h"
 #include <stdlib.h>
+#include <easyx.h>
 #include <stdio.h>
 #define SUCCESS 0
 #define FAILURE 1
 #define ERROR -1
+
 /*
 status initHead(Head snakeHead)
 {
@@ -166,7 +168,7 @@ status checkExistence(Position node, Head snakeHead)
 	return FAILURE;
 }
 
-status initSnake(Snake snake)
+status initSnake(Snake snake, int x, int y)
 {
 	if (snake == NULL)
 	{
@@ -180,8 +182,57 @@ status initSnake(Snake snake)
 		perror("Out of space!!!");
 		return FAILURE;
 	}
+	// 对蛇的各个成员域进行初始化
+	snake->head->x = x;
+	snake->head->y = y;
+	snake->xDirection = 1;
+	snake->yDirection = 0;
+	snake->tail->x = snake->head->x - 2 * SNAKE_NODE_SIZE;
+	snake->tail->y = snake->head->y;
 	snake->head->next = snake->tail;
 	snake->tail->previous = snake->head;
-	snake->head->previous = snake->tail;
+	snake->head->previous = NULL;
+	snake->tail->next = NULL;
+	snake->length = 2;
+	snake->velocity = DEFAULT_MOVE_SPEED;
 	return SUCCESS;
 }
+
+void drawSnake(Snake snake)
+{
+	Position position = snake->head;
+	while (position != NULL)
+	{
+		drawNode(position);
+		position = position->next;
+	}
+	
+}
+
+void drawNode(Position position)
+{
+	setfillcolor(RGB(120, 120, 255));
+	fillcircle(position->x, position->y, SNAKE_NODE_SIZE);
+}
+
+void moveSnake(Snake snake)
+{
+	Position position = snake->tail;
+	while (position->previous != NULL)
+	{
+		advanceNode(position);
+		position = position->previous;
+	}
+	snake->head->x += snake->velocity * snake->xDirection;
+	snake->head->y += snake->velocity * snake->yDirection;
+}
+
+void advanceNode(Position position)
+{
+	if (position->previous != NULL)
+	{
+		position->x = position->previous->x;
+		position->y = position->previous->y;
+	}
+}
+

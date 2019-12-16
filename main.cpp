@@ -1,55 +1,122 @@
-#include "define.h"
+ï»¿#include "define.h"
 #include <easyx.h>
 #include <graphics.h>
 #include <stdio.h>
 #include <conio.h>
-#define DELTA 16
+#include <math.h>
+#include "snake.h"
+#include <sysinfoapi.h>
+#define DELTA 32
 #define WIN 1
 #define LOSE -1
 #define CONTINUE 0
 #define KEY_W 'W'
-
+#define KEY_A 'A'
+#define KEY_S 'S'
+#define KEY_D 'D'
+#define SNAKE_MOVE_SPEED 2
+#define INIT_SNAKE_X 200
+#define INIT_SNAKE_Y 200
 
 void initGraph();
 void newGame();
 int getKey();
+MOUSEMSG* getMouseMsg();
 int checkWin();
 int confirm(int status);
-int x = 200;
-int y = 200;
+//int x = 200;
+//int y = 200;
+//double xDirection = 0;
+//double yDirection = 0;
+double dist(int x1, int y1, int x2, int y2);
 
 
 int main()
 {
-	initGraph(); // Í¼ĞÎÏÔÊ¾·½Ê½³õÊ¼»¯
+	initGraph(); // å›¾å½¢æ˜¾ç¤ºæ–¹å¼åˆå§‹åŒ–
 	int gameRes = 0;
 	int currentCount = 0;
+	Snake snake = (Snake)malloc(sizeof(struct snake));
+	if (snake == NULL)
+	{
+		perror("æ— æ³•åˆ†é…è›‡ç»“ç‚¹ï¼");
+		exit(EXIT_FAILURE);
+	}
+	initSnake(snake, INIT_SNAKE_X, INIT_SNAKE_Y);
+	MOUSEMSG* mouse = NULL;
 	do
 	{
-		newGame(); // ¿ª¾Ö
+		newGame(); // å¼€å±€
 		do
 		{
 			if ((GetTickCount() - currentCount) > DELTA)
 			{
+				//x += (int)SNAKE_MOVE_SPEED * xDirection;
+				//y += (int)SNAKE_MOVE_SPEED * yDirection;
+				moveSnake(snake);
 				cleardevice();
-				circle(x, y, 100);
+				//circle(x, y, SNAKE_NODE_SIZE);
+				drawSnake(snake);
 				currentCount = GetTickCount();
 			}
-			int key = getKey(); // ¶ÁÈë²Ù×÷ĞÅÏ¢
+
+			//mouse = getMouseMsg();
+			int key = getKey(); // è¯»å…¥æ“ä½œä¿¡æ¯
+			
 			if (key == ESC)
 			{
 				gameRes = 0; 
 				break;
 			}
-			
-			switch(key)
+
+			/*
+			while (MouseHit())
 			{
-			case UP:
-				y += 20;
-				break;
+				mouse = getMouseMsg();
+				if (mouse->mkLButton)
+				{
+					xDirection = (mouse->x - x) / dist(x, y, mouse->x, mouse->y);
+					yDirection = (mouse->y - y) / dist(x, y, mouse->x, mouse->y);
+				}
+			}
+			*/
+			
+			while (MouseHit())
+			{
+				MOUSEMSG mouseMsg = GetMouseMsg();
+				//snake->xDirection = (mouseMsg.x - x) / dist(x, y, mouseMsg.x, mouseMsg.y);
+				//snake->yDirection = (mouseMsg.y - y) / dist(x, y, mouseMsg.x, mouseMsg.y);
+				
+				if (mouseMsg.mkLButton)
+				{
+					snake->xDirection = (mouseMsg.x - snake->head->x) / dist(snake->head->x, snake->head->y, mouseMsg.x, mouseMsg.y);
+					snake->yDirection = (mouseMsg.y - snake->head->y) / dist(snake->head->x, snake->head->y, mouseMsg.x, mouseMsg.y);
+				}
+				
 			}
 			
-			if (checkWin()) // ÅĞ¶ÏÓÎÏ·ÊÇ·ñÊ¤Àû
+			
+			/*
+			// æŒ‰é”®äº‹ä»¶åˆ¤æ–­å“åº”
+			switch(key)
+			{
+			case KEY_W:
+				y -= 2;
+				break;
+			case KEY_S:
+				y += 2;
+				break;
+			case KEY_A:
+				x -= 2;
+				break;
+			case KEY_D:
+				x += 2;
+				break;
+			default:
+				break;
+			}
+			*/
+			if (checkWin()) // åˆ¤æ–­æ¸¸æˆæ˜¯å¦èƒœåˆ©
 				gameRes = 1;
 		} while (!gameRes);
 	} while (!confirm(gameRes));
@@ -60,11 +127,11 @@ int main()
 
 void initGraph()
 {
-	initgraph(640, 480);   // ´´½¨»æÍ¼´°¿Ú£¬´óĞ¡Îª 640x480 ÏñËØ
+	initgraph(640, 480);   // åˆ›å»ºç»˜å›¾çª—å£ï¼Œå¤§å°ä¸º 640x480 åƒç´ 
 	
 }
 /*
-void s_detectgraph() {// ×Ô¶¨ÒåÍ¼ĞÎ¼ì²â
+void s_detectgraph() {// è‡ªå®šä¹‰å›¾å½¢æ£€æµ‹
 	int gdriver, gmode, errorcode;
 	gdriver = VGA;
 	gmode = VGAHI;
@@ -80,17 +147,43 @@ void s_detectgraph() {// ×Ô¶¨ÒåÍ¼ĞÎ¼ì²â
 }
 */
 
-void newGame()
+double dist(int x1, int y1, int x2, int y2)
 {
-	circle(x, y, 100); // »­Ô²£¬Ô²ĞÄ(200, 200)£¬°ë¾¶ 100
+	double distance;
+	distance = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+	return distance;
 }
 
+void newGame()
+{
+	//circle(x, y, 100); // ç”»åœ†ï¼Œåœ†å¿ƒ(200, 200)ï¼ŒåŠå¾„ 100
+}
+
+// å°è£…çš„è·å¾—é¼ æ ‡äº‹ä»¶æŒ‡é’ˆçš„å‡½æ•°
+MOUSEMSG* getMouseMsg()
+{
+	if (MouseHit())
+	{
+		MOUSEMSG message = GetMouseMsg();
+		return &message;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+// å°è£…çš„è·å–é”®ç›˜äº‹ä»¶çš„å‡½æ•°
 int getKey()
 {
-	if (!_kbhit())
+	if (_kbhit())
 	{
 		int val = _getch();
 		return val;
+	}
+	else
+	{
+		return 0;
 	}
 }
 
