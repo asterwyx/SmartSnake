@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "game.h"
 #include <stdlib.h>
 #include <sysinfoapi.h>
@@ -201,6 +202,34 @@ void checkCollisions(Game game)
 	if (game->snake->length >= WIN_LENGTH)
 	{
 		game->hasWon = YES;
+	}
+	if (game->isOver == YES)
+	{
+		int scores[10] = { 0 };
+		freopen("scores.txt", "r", stdin);
+		for (size_t i = 0; i < 10; i++)
+		{
+			scanf("%d", scores + i);
+		}
+		for (int i = 0; i < 10; i++)
+		{
+			if (game->score > scores[i])
+			{
+				for (int j = i + 1; j < 10; j++)
+				{
+					scores[j] = scores[j - 1];
+				}
+				scores[i] = game->score;
+				break;
+			}
+		}
+		fclose(stdin);
+		freopen("scores.txt", "w", stdout);
+		for (int i = 0; i < 10; i++)
+		{
+			printf("%d ", scores[i]);
+		}
+		fclose(stdout);
 	}
 }
 

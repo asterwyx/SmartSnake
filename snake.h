@@ -28,7 +28,6 @@ status insertByNode(int x, int y, Position node);
 status insertByIndex(int x, int y, int index, Head snakeHead);
 status checkExistence(Position node, Head snakeHead);
 status deleteNode(Position node, Head snakeHead);
-void traverse(Head snakeHead);
 int getLength(Head snakeHead);
 Position findNodeByIndex(int index, Head snakeHead);
 Position findNodeByValue(int x, int y, Head snakeHead);

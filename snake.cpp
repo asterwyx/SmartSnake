@@ -163,10 +163,6 @@ status deleteNode(Position node, Head snakeHead)
 	}
 }
 
-void traverse(Head snakeHead)
-{
-	
-}
 
 status checkExistence(Position node, Head snakeHead)
 {

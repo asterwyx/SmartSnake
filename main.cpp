@@ -1,4 +1,5 @@
-﻿#include "define.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include "define.h"
 #include <easyx.h>
 #include <graphics.h>
 #include <stdio.h>
@@ -84,8 +85,21 @@ int main()
 			}
 		} while (game->isOver == NO);
 		cleardevice();
-		outtextxy(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "你输了");
-		outtextxy(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + FONT_DIST, "按'Y'开始新游戏");
+		int scores[10] = { 0 };
+		freopen("scores.txt", "r", stdin);
+		for (size_t i = 0; i < 10; i++)
+		{
+			scanf("%d", scores + i);
+		}
+		fclose(stdin);
+		char buffer[20];
+		for (int i = 0; i < 10; i++)
+		{
+			sprintf_s(buffer, "%d      %d", i + 1, scores[i]);
+			outtextxy(WINDOW_WIDTH / 2, 100 + i * FONT_DIST, buffer);
+		}
+		outtextxy(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 200, "你输了");
+		outtextxy(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + FONT_DIST + 200, "按'Y'开始新游戏");
 		int val = _getch();
 		if (val == 'Y')
 		{
