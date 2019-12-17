@@ -1,6 +1,9 @@
 #include "interactiveObjects.h"
 #include <stdlib.h>
 #include "define.h"
+#include <math.h>
+#include <time.h>
+#include <easyx.h>
 status initObject(PtrToObject o, Kind type)
 {
 	// 不同于蛇，Object的头结点是空的，从第二个结点开始存储信息
@@ -152,7 +155,10 @@ status o_deleteNode(PtrToNode node, PtrToNode head)
 		PtrToNode previous = node->previous;
 		PtrToNode next = node->next;
 		previous->next = next;
-		next->previous = previous;
+		if (next != NULL)
+		{
+			next->previous = previous;
+		}
 		free(node);
 		return SUCCESS;
 	}
@@ -170,6 +176,93 @@ status o_checkExistence(PtrToNode node, PtrToNode head)
 		tmp = tmp->next;
 	}
 	return FAILURE;
+}
+
+status o_deleteOne(PtrToNode node, PtrToObject o)
+{
+	if (o->size == 0)
+	{
+		return FAILURE;
+	}
+	else
+	{
+		o->size--;
+		if (node == o->tail)
+		{
+			// 如果是删除了尾结点或者说是变动了当前尾结点
+			PtrToNode tmpPos = o->tail;
+			o->tail = tmpPos->previous; // 设置尾指针
+			o->tail->next = NULL; // 设置尾结点
+			free(tmpPos); // 释放结点
+			return SUCCESS;
+		}
+		else
+		{
+			return o_deleteNode(node, o->head);  // 从头结点删除
+		}
+	}
+}
+
+status o_addObject(PtrToObject o)
+{
+	// 重置随机种子
+	srand(time(NULL));
+	// 生成随机坐标
+	int randomX = rand() % MAP_WIDTH;
+	int randomY = rand() % MAP_HEIGHT;
+	status result = o_insertByNode(randomX, randomY, o->tail);
+	if (result == SUCCESS)
+	{
+		// 改变大小和尾结点
+		o->tail = o->tail->next;
+		o->size++;
+	}
+	return result;
+}
+
+void o_drawNode(PtrToNode node, int parameters[], Kind type)
+{
+	switch (type)
+	{
+	case MINE:
+		setfillcolor(MINE_COLOR); // 接近灰色
+		fillcircle(node->x, node->y, parameters[0]);
+		break;
+	case FOOD:
+		setfillcolor(FOOD_COLOR);
+		fillrectangle(node->x, node->y, node->x + parameters[0], node->y + parameters[1]);
+		break;
+	case POISONOUSWEEDS:
+		setfillcolor(POISON_COLOR);
+		fillrectangle(node->x, node->y, node->x + parameters[0], node->y + parameters[1]);
+		break;
+	case WISDOMGRASS:
+		setfillcolor(WISDOM_GRASS_COLOR);
+		fillrectangle(node->x, node->y, node->x + parameters[0], node->y + parameters[1]);
+		break;
+	case WALL:
+		setfillcolor(WALL_COLOR);
+		fillrectangle(node->x, node->y, node->x + parameters[0], node->y + parameters[1]);
+		break;
+	default:
+		break;
+	}
+}
+
+void drawObject(PtrToObject o)
+{
+	if (o == NULL)
+	{
+		perror("NULL object!!!");
+		return;
+	}
+	PtrToNode tmpPos = o->head->next;
+	// 从头结点开始逐个画
+	while (tmpPos != NULL)
+	{
+		o_drawNode(tmpPos, o->parameters, o->type);
+		tmpPos = tmpPos->next;
+	}
 }
 
 PtrToNode o_findNodeByIndex(int index, PtrToNode head)
@@ -202,6 +295,7 @@ PtrToNode o_findNodeByValue(int x, int y, PtrToNode head)
 		}
 		position = position->next;
 	}
+	return NULL;
 }
 
 PtrToNode checkCollision(PtrToObject o, Snake snake)
@@ -312,5 +406,13 @@ PtrToNode checkCollision(PtrToObject o, Snake snake)
 		}
 	}
 	
+	return result;
+}
+
+status clearObject(PtrToObject o)
+{
+	o->size = 0; // 个数置零
+	status result = o_makeEmpty(o->head); // 清空列表
+	o->tail = o->head; // 设置尾结点
 	return result;
 }

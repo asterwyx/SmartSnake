@@ -122,6 +122,7 @@ Position findNodeByValue(int x, int y, Head snakeHead)
 		}
 		position = position->next;
 	}
+	return NULL;
 }
 
 int getLength(Head snakeHead)
@@ -153,7 +154,10 @@ status deleteNode(Position node, Head snakeHead)
 		Position previous = node->previous;
 		Position next = node->next;
 		previous->next = next;
-		next->previous = previous;
+		if (next != NULL)
+		{
+			next->previous = previous;
+		}
 		free(node);
 		return SUCCESS;
 	}
@@ -217,12 +221,11 @@ void drawSnake(Snake snake)
 		drawNode(position);
 		position = position->next;
 	}
-	
 }
 
 void drawNode(Position position)
 {
-	setfillcolor(RGB(120, 120, 255));
+	setfillcolor(SNAKE_COLOR);
 	fillcircle(position->x, position->y, SNAKE_NODE_SIZE);
 }
 
@@ -340,6 +343,17 @@ void deleteHalf(Snake snake)
 		snake->tail = newTail; // 设置新的尾结点
 		snake->length = halfLength; // 设置新蛇的长度
 	}
+}
+
+void resetSnake(Snake snake, int velocity)
+{
+	makeEmpty(snake->head);
+	snake->tail = snake->head;
+	snake->length = 2;
+	snake->xDirection = INIT_XDIRECTION; // 设置初始方向
+	snake->yDirection = INIT_YDIRECTION; 
+	snake->velocity = velocity; // 设置初始速度
+	addTail(snake);
 }
 
 

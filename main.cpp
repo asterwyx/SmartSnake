@@ -18,7 +18,6 @@ int confirm(int status);
 //int y = 200;
 //double xDirection = 0;
 //double yDirection = 0;
-double dist(int x1, int y1, int x2, int y2);
 
 
 int main()
@@ -124,7 +123,7 @@ int main()
 
 void initGraph()
 {
-	initgraph(1200, 700);   // 创建绘图窗口，大小为 640x480 像素
+	initgraph(WINDOW_WIDTH, WINDOW_HEIGHT);   // 创建绘图窗口，大小为 640x480 像素
 	
 }
 /*

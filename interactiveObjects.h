@@ -10,18 +10,12 @@ typedef struct o_node {
 	struct o_node* next;
 } O_Node;
 typedef O_Node* PtrToNode;
-typedef enum kind
-{
-	FOOD,
-	MINE,
-	POISONOUSWEEDS,
-	WISDOMGRASS,
-	WALL
-} Kind;
+
 typedef struct object {
 	PtrToNode head;
 	PtrToNode tail;
 	int size;
+	int parameters[2]; // 碰撞检测边界的参数，圆存放半径，矩形存放宽和高
 	Kind type;
 } Object;
 typedef Object* PtrToObject;
@@ -41,5 +35,10 @@ status o_deleteNode(PtrToNode node, PtrToNode head);
 status o_checkExistence(PtrToNode node, PtrToNode head);
 PtrToNode o_findNodeByIndex(int index, PtrToNode head);
 PtrToNode o_findNodeByValue(int x, int y, PtrToNode head);
+status o_deleteOne(PtrToNode node, PtrToObject o);
+status o_addObject(PtrToObject o); // 这里面包括各种物体的随机生成逻辑
+void o_drawNode(PtrToNode node, int parameters[], Kind type); // 不同物体结点的统一绘制方法
+void drawObject(PtrToObject o);
 PtrToNode checkCollision(PtrToObject o, Snake snake);
+status clearObject(PtrToObject o);
 #endif // !_INTERACTIVE_OBJECTS_H

@@ -40,5 +40,6 @@ void advanceNode(Position position); // 当前结点设置为前一个结点的坐标，实现结点
 void addTail(Snake snake); // 吃到食物后在适当位置加一个结点
 void deleteOne(Snake snake);
 void deleteHalf(Snake snake);
+void resetSnake(Snake snake, int velocity); // 重置蛇，在新游戏的时候使用
 
 #endif // !_Node_H
