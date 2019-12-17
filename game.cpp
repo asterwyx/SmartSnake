@@ -1,6 +1,8 @@
 #include "game.h"
 #include <stdlib.h>
 #include <sysinfoapi.h>
+#include <easyx.h>
+#include <string.h>
 
 status initGame(Game game, Level level)
 {
@@ -40,6 +42,8 @@ status initGame(Game game, Level level)
 
 void nextScreening(Game game)
 {
+	cleardevice();
+	outtextxy(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "加载中");
 	game->screening++; // 设置关卡
 	game->isOver = NO;
 	game->hasWon = NO; // 状态重置
@@ -77,6 +81,8 @@ void nextScreening(Game game)
 
 void newGame(Game game)
 {
+	cleardevice();
+	outtextxy(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, "加载中");
 	// 这个函数只在游戏已经初始化了之后调用，已经设置等级，等级不需要被更改
 	// 从第一关开始
 	game->screening = 1;
@@ -153,21 +159,35 @@ void checkCollisions(Game game)
 	}
 	if ((collidedPos = checkCollision(game->mines, game->snake)) != NULL)
 	{
-		// 减少蛇的长度到原来的一半
-		deleteHalf(game->snake);
-		// 减少分数到原来的一半
-		game->score = game->score / 2;
-		// 删除被碰掉的地雷
-		o_deleteOne(collidedPos, game->mines);
-		//新增一个地雷
-		o_addObject(game->mines);
+		if (game->snake->length == 0)
+		{
+			game->isOver = YES;
+		}
+		else
+		{
+			// 减少蛇的长度到原来的一半
+			deleteHalf(game->snake);
+			// 减少分数到原来的一半
+			game->score = game->score / 2;
+			// 删除被碰掉的地雷
+			o_deleteOne(collidedPos, game->mines);
+			//新增一个地雷
+			o_addObject(game->mines);
+		}
 	}
 	if ((collidedPos = checkCollision(game->poisonousWeeds, game->snake)) != NULL)
 	{
-		deleteOne(game->snake); // 长度减一
-		game->score += POISON_SCORE; // 改变得分
-		// 删除被吃掉的毒草
-		o_deleteOne(collidedPos, game->poisonousWeeds);
+		if (game->snake->length == 1)
+		{
+			game->isOver = YES;
+		}
+		else
+		{
+			deleteOne(game->snake); // 长度减一
+			game->score += POISON_SCORE; // 改变得分
+			// 删除被吃掉的毒草
+			o_deleteOne(collidedPos, game->poisonousWeeds);
+		}		
 	}
 	if ((collidedPos = checkCollision(game->wisdomGrass, game->snake)) != NULL)
 	{
@@ -177,10 +197,17 @@ void checkCollisions(Game game)
 		o_deleteOne(collidedPos, game->wisdomGrass);
 		o_addObject(game->wisdomGrass); // 新增一个智慧草
 	}
+	// 胜利检测
+	if (game->snake->length >= WIN_LENGTH)
+	{
+		game->hasWon = YES;
+	}
 }
 
 void updateUI(Game game)
 {
+	setfillcolor(RGB(0, 255, 0));
+	fillrectangle(0, 0, MAP_WIDTH, MAP_HEIGHT);
 	// 包括定时检测和生成交互物体控制
 	drawSnake(game->snake); // 画蛇
 	drawObject(game->foods); // 画食物
@@ -198,8 +225,16 @@ void updateUI(Game game)
 	{
 		game->poisonTimer1 = YES;
 	}
-	drawObject(game->poisonousWeeds);
 	drawObject(game->walls); // 画墙
 	drawObject(game->wisdomGrass); // 画智慧草
-	
+	outtextxy(MAP_WIDTH + 50, 100, "当前分数");
+	TCHAR buffer[100];
+	sprintf_s(buffer, "%d", game->score);
+	outtextxy(MAP_WIDTH + 50, 150, buffer);
+	outtextxy(MAP_WIDTH + 100, 200, "当前长度");
+	sprintf_s(buffer, "%d", game->snake->length);
+	outtextxy(MAP_WIDTH + 50, 250, buffer);
+	sprintf_s(buffer, "%d", game->screening);
+	outtextxy(MAP_WIDTH + 50, 300, "当前关卡");
+	outtextxy(MAP_WIDTH + 50, 350, buffer);
 }

@@ -1,10 +1,9 @@
 #ifndef _GAME_H
 #define _GAME_H
-#include "snake.h"
 #include "interactiveObjects.h"
+#include <Windows.h>
 #include "cJSON.h"
 #include <stdio.h>
-
 
 typedef struct game {
 	int score; // 玩家目前累计得分

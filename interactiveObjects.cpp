@@ -117,7 +117,10 @@ status o_insertByNode(int x, int y, PtrToNode node)
 			newNode->y = y;
 			newNode->previous = node;
 			newNode->next = node->next;
-			node->next->previous = newNode;
+			if (node->next != NULL)
+			{
+				node->next->previous = newNode;
+			}
 			node->next = newNode;
 			return SUCCESS;
 		}
@@ -205,8 +208,9 @@ status o_deleteOne(PtrToNode node, PtrToObject o)
 
 status o_addObject(PtrToObject o)
 {
+	Sleep(100);
 	// 重置随机种子
-	srand(time(NULL));
+	srand((unsigned int)GetTickCount());
 	// 生成随机坐标
 	int randomX = rand() % MAP_WIDTH;
 	int randomY = rand() % MAP_HEIGHT;

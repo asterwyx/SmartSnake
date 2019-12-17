@@ -269,9 +269,6 @@ void addTail(Snake snake)
 			// 初始化尾结点
 			newTail->x = snake->tail->x + deltaX;
 			newTail->y = snake->tail->y + deltaY;
-			
-
-
 		}
 		else
 		{
@@ -284,6 +281,7 @@ void addTail(Snake snake)
 		newTail->previous = snake->tail;
 		newTail->next = NULL;
 		snake->tail = newTail;
+		snake->length++;
 	}
 	else
 	{
@@ -349,11 +347,16 @@ void resetSnake(Snake snake, int velocity)
 {
 	makeEmpty(snake->head);
 	snake->tail = snake->head;
-	snake->length = 2;
+	snake->length = 1;
 	snake->xDirection = INIT_XDIRECTION; // 设置初始方向
 	snake->yDirection = INIT_YDIRECTION; 
 	snake->velocity = velocity; // 设置初始速度
 	addTail(snake);
+}
+
+status checkSelf(Snake snake)
+{
+	return YES;
 }
 
 
