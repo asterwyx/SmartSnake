@@ -1,4 +1,4 @@
-#include "snake.h"
+ï»¿#include "snake.h"
 #include <stdlib.h>
 #include <easyx.h>
 #include <stdio.h>
@@ -18,7 +18,7 @@ status initHead(Head snakeHead)
 	}
 	else
 	{
-		// Á´½ÓĞÂÉú³ÉµÄÎ²½áµãµ½Í·½áµãÉÏ£¬Ê¹ÓÃÍ·½áµãµÄpreviousÖ¸ÕëÖ¸ÏòÎ²½áµã£¬±ãÓÚÖ®ºóÖ±½Ó²åÈëĞÂ½áµã
+		// é“¾æ¥æ–°ç”Ÿæˆçš„å°¾ç»“ç‚¹åˆ°å¤´ç»“ç‚¹ä¸Šï¼Œä½¿ç”¨å¤´ç»“ç‚¹çš„previousæŒ‡é’ˆæŒ‡å‘å°¾ç»“ç‚¹ï¼Œä¾¿äºä¹‹åç›´æ¥æ’å…¥æ–°ç»“ç‚¹
 		tail->next = NULL;
 		tail->previous = snakeHead;
 		snakeHead->next = tail;
@@ -41,7 +41,7 @@ status makeEmpty(Head snakeHead)
 		free(tmp);
 		tmp = snakeHead->next;
 	}
-	snakeHead->next = NULL; // Ö¸ÕëÖÃ¿Õ
+	snakeHead->next = NULL; // æŒ‡é’ˆç½®ç©º
 	return SUCCESS;
 }
 
@@ -192,7 +192,7 @@ status initSnake(Snake snake, int x, int y)
 		perror("Out of space!!!");
 		return FAILURE;
 	}
-	// ¶ÔÉßµÄ¸÷¸ö³ÉÔ±Óò½øĞĞ³õÊ¼»¯
+	// å¯¹è›‡çš„å„ä¸ªæˆå‘˜åŸŸè¿›è¡Œåˆå§‹åŒ–
 	snake->head->x = x;
 	snake->head->y = y;
 	snake->xDirection = 1;
@@ -253,26 +253,26 @@ void addTail(Snake snake)
 		perror("NULL snake!!!");
 		return;
 	}
-	// ÊÊµ±µÄÎ»ÖÃÊÇÖ¸Î²²¿Èı¸ö½áµãÁ¬³ÉÒ»ÌõÏß£¬ÇÒ¾àÀëÏàµÈ£¬µ±Ö»Ê£Ò»¸öÍ·½áµãµÄÊ±ºò£¬ÔÚÇ°½ø·½ÏòµÄ·´·½ÏòÌí¼Ó
-	Tail newTail = (Tail)malloc(sizeof(Node)); // ĞÂ½¨Î²½áµã
+	// é€‚å½“çš„ä½ç½®æ˜¯æŒ‡å°¾éƒ¨ä¸‰ä¸ªç»“ç‚¹è¿æˆä¸€æ¡çº¿ï¼Œä¸”è·ç¦»ç›¸ç­‰ï¼Œå½“åªå‰©ä¸€ä¸ªå¤´ç»“ç‚¹çš„æ—¶å€™ï¼Œåœ¨å‰è¿›æ–¹å‘çš„åæ–¹å‘æ·»åŠ 
+	Tail newTail = (Tail)malloc(sizeof(Node)); // æ–°å»ºå°¾ç»“ç‚¹
 	if (newTail != NULL)
 	{
 		if (snake->length == 1)
 		{
-			// È·¶¨ĞÂ½áµãÔÚÎ²½áµãµÄx,y×ø±êÉÏµÄx,yÔöÁ¿£¬ºÍÇ°½ø·½ÏòÉÏµÄÔöÁ¿Ïà·´
+			// ç¡®å®šæ–°ç»“ç‚¹åœ¨å°¾ç»“ç‚¹çš„x,yåæ ‡ä¸Šçš„x,yå¢é‡ï¼Œå’Œå‰è¿›æ–¹å‘ä¸Šçš„å¢é‡ç›¸å
 			int deltaX = -snake->xDirection * SNAKE_NODE_SIZE * 2;
 			int deltaY = -snake->yDirection * SNAKE_NODE_SIZE * 2;
-			// ³õÊ¼»¯Î²½áµã
+			// åˆå§‹åŒ–å°¾ç»“ç‚¹
 			newTail->x = snake->tail->x + deltaX;
 			newTail->y = snake->tail->y + deltaY;
 		}
 		else
 		{
-			// ÆÕÍ¨Çé¿öÏÂ£¬Ê¹ÓÃÖĞµã×ø±ê¹ØÏµ
+			// æ™®é€šæƒ…å†µä¸‹ï¼Œä½¿ç”¨ä¸­ç‚¹åæ ‡å…³ç³»
 			newTail->x = 2 * snake->tail->x - snake->tail->previous->x;
 			newTail->y = 2 * snake->tail->y - snake->tail->previous->y;
 		}
-		// ¼Óµ½ÉßÉÏÈ¥
+		// åŠ åˆ°è›‡ä¸Šå»
 		snake->tail->next = newTail;
 		newTail->previous = snake->tail;
 		newTail->next = NULL;
@@ -288,7 +288,7 @@ void addTail(Snake snake)
 
 void deleteOne(Snake snake)
 {
-	// É¾³ıÉßÀïÃæµÄÒ»¸ö½áµã£¬²¢½«³¤¶È¼õÒ»£¬Èç¹ûÊÇÁã£¬ÔòÖ±½Ó·µ»Ø
+	// åˆ é™¤è›‡é‡Œé¢çš„ä¸€ä¸ªç»“ç‚¹ï¼Œå¹¶å°†é•¿åº¦å‡ä¸€ï¼Œå¦‚æœæ˜¯é›¶ï¼Œåˆ™ç›´æ¥è¿”å›
 	if (snake == NULL)
 	{
 		perror("NULL snake");
@@ -296,17 +296,17 @@ void deleteOne(Snake snake)
 	}
 	if (snake->length == 0)
 	{
-		return; // ³¤¶ÈÎª0Ö±½Ó·µ»Ø
+		return; // é•¿åº¦ä¸º0ç›´æ¥è¿”å›
 	}
 	else
 	{
-		// ÏÈ½«³¤¶È¼õÒ»
+		// å…ˆå°†é•¿åº¦å‡ä¸€
 		snake->length--;
-		// É¾³ıÎ²½áµã
-		Position tmpPos = snake->tail; // ¼ÇÂ¼Ô­À´µÄÎ²½áµã
-		snake->tail = tmpPos->previous; // ÉèÖÃĞÂµÄÎ²½áµã
-		snake->tail->next = NULL; // ÖØĞÂÉèÖÃNULL
-		free(tmpPos); // ÊÍ·ÅÎŞÓÃµÄÎ²½áµã
+		// åˆ é™¤å°¾ç»“ç‚¹
+		Position tmpPos = snake->tail; // è®°å½•åŸæ¥çš„å°¾ç»“ç‚¹
+		snake->tail = tmpPos->previous; // è®¾ç½®æ–°çš„å°¾ç»“ç‚¹
+		snake->tail->next = NULL; // é‡æ–°è®¾ç½®NULL
+		free(tmpPos); // é‡Šæ”¾æ— ç”¨çš„å°¾ç»“ç‚¹
 	}
 }
 
@@ -323,19 +323,19 @@ void deleteHalf(Snake snake)
 	}
 	else if (snake->length == 1)
 	{
-		// Ö»ÓĞÒ»¸öÍ·½áµãµÄÌØÊâÇé¿ö£¬Òª½«snakeµÄÍ·Î²½áµãÖ¸ÕëÒ²ÒªÖÃ¿Õ
-		free(snake->head); // Ö±½ÓÊÍ·ÅµôÍ·½áµã
+		// åªæœ‰ä¸€ä¸ªå¤´ç»“ç‚¹çš„ç‰¹æ®Šæƒ…å†µï¼Œè¦å°†snakeçš„å¤´å°¾ç»“ç‚¹æŒ‡é’ˆä¹Ÿè¦ç½®ç©º
+		free(snake->head); // ç›´æ¥é‡Šæ”¾æ‰å¤´ç»“ç‚¹
 		snake->head = NULL;
-		snake->tail = NULL; // Í·Î²Ö¸ÕëÖÃ¿Õ
+		snake->tail = NULL; // å¤´å°¾æŒ‡é’ˆç½®ç©º
 		snake->length = 0;
 	}
 	else
 	{
-		int halfLength = snake->length / 2; // Ëã³öÒ»°ëµÄ³¤¶È
-		Position newTail = findNodeByIndex(halfLength, snake->head); // È·¶¨ÁËÒ»°ëµÄ³¤¶È£¬Ò»°ã³¤¶ÈÎ»ÖÃµÄ½áµãÒ²¾Í³ÉÁËĞÂµÄÎ²½áµã
-		makeEmpty(newTail); // ÖÃ¿ÕĞÂµÄÎ²½áµãÖ®ºóµÄËùÓĞ½áµã
-		snake->tail = newTail; // ÉèÖÃĞÂµÄÎ²½áµã
-		snake->length = halfLength; // ÉèÖÃĞÂÉßµÄ³¤¶È
+		int halfLength = snake->length / 2; // ç®—å‡ºä¸€åŠçš„é•¿åº¦
+		Position newTail = findNodeByIndex(halfLength, snake->head); // ç¡®å®šäº†ä¸€åŠçš„é•¿åº¦ï¼Œä¸€èˆ¬é•¿åº¦ä½ç½®çš„ç»“ç‚¹ä¹Ÿå°±æˆäº†æ–°çš„å°¾ç»“ç‚¹
+		makeEmpty(newTail); // ç½®ç©ºæ–°çš„å°¾ç»“ç‚¹ä¹‹åçš„æ‰€æœ‰ç»“ç‚¹
+		snake->tail = newTail; // è®¾ç½®æ–°çš„å°¾ç»“ç‚¹
+		snake->length = halfLength; // è®¾ç½®æ–°è›‡çš„é•¿åº¦
 	}
 }
 
@@ -344,9 +344,9 @@ void resetSnake(Snake snake, int velocity)
 	makeEmpty(snake->head);
 	snake->tail = snake->head;
 	snake->length = 1;
-	snake->xDirection = INIT_XDIRECTION; // ÉèÖÃ³õÊ¼·½Ïò
+	snake->xDirection = INIT_XDIRECTION; // è®¾ç½®åˆå§‹æ–¹å‘
 	snake->yDirection = INIT_YDIRECTION; 
-	snake->velocity = velocity; // ÉèÖÃ³õÊ¼ËÙ¶È
+	snake->velocity = velocity; // è®¾ç½®åˆå§‹é€Ÿåº¦
 	addTail(snake);
 }
 

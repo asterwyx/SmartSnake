@@ -1,8 +1,8 @@
-#ifndef _INTERACTIVE_OBJECTS_H
+ï»¿#ifndef _INTERACTIVE_OBJECTS_H
 #define _INTERACTIVE_OBJECTS_H
 #include "define.h"
 #include "snake.h"
-// ±íÊ¾»¥¶¯ÎïÌåµÄµ¥ÏòÁ´±í
+// è¡¨ç¤ºäº’åŠ¨ç‰©ä½“çš„åŒå‘é“¾è¡¨
 typedef struct o_node {
 	int x;
 	int y;
@@ -15,14 +15,14 @@ typedef struct object {
 	PtrToNode head;
 	PtrToNode tail;
 	int size;
-	int parameters[2]; // Åö×²¼ì²â±ß½çµÄ²ÎÊı£¬Ô²´æ·Å°ë¾¶£¬¾ØĞÎ´æ·Å¿íºÍ¸ß
+	int parameters[2]; // ç¢°æ’æ£€æµ‹è¾¹ç•Œçš„å‚æ•°ï¼Œåœ†å­˜æ”¾åŠå¾„ï¼ŒçŸ©å½¢å­˜æ”¾å®½å’Œé«˜
 	Kind type;
 } Object;
 typedef Object* PtrToObject;
-typedef PtrToObject Food; // Ê³Îï
-typedef PtrToObject Mine; // µØÀ×
-typedef PtrToObject PoisonousWeeds; // ¶¾²İ
-typedef PtrToObject WisdomGrass; // ÖÇ»Û²İ
+typedef PtrToObject Food; // é£Ÿç‰©
+typedef PtrToObject Mine; // åœ°é›·
+typedef PtrToObject PoisonousWeeds; // æ¯’è‰
+typedef PtrToObject WisdomGrass; // æ™ºæ…§è‰
 typedef PtrToObject Wall;
 
 
@@ -36,8 +36,8 @@ status o_checkExistence(PtrToNode node, PtrToNode head);
 PtrToNode o_findNodeByIndex(int index, PtrToNode head);
 PtrToNode o_findNodeByValue(int x, int y, PtrToNode head);
 status o_deleteOne(PtrToNode node, PtrToObject o);
-status o_addObject(PtrToObject o); // ÕâÀïÃæ°üÀ¨¸÷ÖÖÎïÌåµÄËæ»úÉú³ÉÂß¼­
-void o_drawNode(PtrToNode node, int parameters[], Kind type); // ²»Í¬ÎïÌå½áµãµÄÍ³Ò»»æÖÆ·½·¨
+status o_addObject(PtrToObject o); // è¿™é‡Œé¢åŒ…æ‹¬å„ç§ç‰©ä½“çš„éšæœºç”Ÿæˆé€»è¾‘
+void o_drawNode(PtrToNode node, int parameters[], Kind type); // ä¸åŒç‰©ä½“ç»“ç‚¹çš„ç»Ÿä¸€ç»˜åˆ¶æ–¹æ³•
 void drawObject(PtrToObject o);
 PtrToNode checkCollision(PtrToObject o, Snake snake);
 status clearObject(PtrToObject o);
