@@ -37,4 +37,6 @@
 *.vcxproj.filters
 
 # Output Folder
-Debug/
+build/
+.idea/
+.vscode/
