@@ -1,5 +1,6 @@
 #ifndef _SNAKE_H
 #define _SNAKE_H
+
 #include <math.h>
 #include "define.h"
 // 声明蛇结点结构体
@@ -41,4 +42,5 @@ void deleteOne(Snake snake);
 void deleteHalf(Snake snake);
 void resetSnake(Snake snake, int velocity); // 重置蛇，在新游戏的时候使用
 status checkSelf(Snake snake);
-#endif // !_Node_H
+
+#endif // !_SNAKE_H
