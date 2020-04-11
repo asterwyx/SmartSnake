@@ -1,5 +1,6 @@
-#ifndef _DEFINE_H
-#define _DEFINE_H
+#ifndef _CONSTANTS_H
+#define _CONSTANTS_H
+
 // 刷新间隔
 #define DELTA 48
 // 游戏输赢状态
@@ -86,4 +87,4 @@ typedef enum kind
 // 工具函数
 extern double dist(int x1, int y1, int x2, int y2);
 
-#endif // !_DEFINE_H
+#endif // !_CONSTANTS_H

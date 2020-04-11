@@ -2,8 +2,9 @@
 #define _SNAKE_H
 
 #include <math.h>
-#include "define.h"
-// 声明蛇结点结构体
+#include "constants.h"
+
+// 声明蛇结点结构体，蛇的本体是一个双向链表
 typedef struct node {
 	int x;
 	int y;
@@ -13,6 +14,10 @@ typedef struct node {
 typedef Node* Position;
 typedef Node* Head;
 typedef Node* Tail;
+
+class CSnake {
+	
+};
 typedef struct snake {
 	Head head;
 	Tail tail;

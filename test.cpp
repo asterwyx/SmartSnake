@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include "SDL.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -34,5 +34,6 @@ int main(int argc, char *argv[])
     }
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
-    return 0;
+    unsigned u = 0;
+     return 0;
 }
